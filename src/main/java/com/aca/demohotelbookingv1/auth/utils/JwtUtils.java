@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Component
 public class JwtUtils {
-    private final String secret_key = "qeri_dog";
+    private final String secret_key = "hotel-key";
 
     private final JwtParser jwtParser;
 
@@ -23,9 +23,6 @@ public class JwtUtils {
     }
     public String createToken(User user) {
         Claims claims = Jwts.claims().setSubject(user.getEmail());
-//      ____________________________________________________________
-        claims.put("firstName", user.getFirstName()); // Why we put in claims only name?
-//        ______________________________________________________
         claims.put("created", Date.from(Instant.now()));
         return Jwts.builder()
                 .setClaims(claims)
@@ -70,10 +67,6 @@ public class JwtUtils {
     public String getEmail(Claims claims) {
         return claims.getSubject();
     }
-
-//    private List<String> getRoles(Claims claims) {
-//        return (List<String>) claims.get("roles");
-//    }
 
     private Claims parseJwtClaims(String token) {
         return jwtParser.parseClaimsJws(token).getBody();

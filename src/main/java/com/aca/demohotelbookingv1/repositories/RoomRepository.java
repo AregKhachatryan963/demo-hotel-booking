@@ -12,6 +12,9 @@ import java.util.List;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {List<Room> findAllByHotelId(Long hotelId);
 
+    @Query("select count(*) > 0 from Room r inner join r.hotel h where h.id = :hotelId and r.id = :roomId")
+    boolean existsByHotelIdRoomId(Long hotelId, Long roomId);
+
     @Query("select r from Room r inner join r.hotel h where h.id = :hotelId and r.id = :roomId")
     Room findRoomByHotelIdRoomId(Long hotelId, Long roomId);
 

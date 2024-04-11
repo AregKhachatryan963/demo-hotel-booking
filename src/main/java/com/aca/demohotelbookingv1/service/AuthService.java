@@ -25,15 +25,15 @@ private final JwtUtils jwtUtils;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.jwtUtils = jwtUtils;
     }
-    public String registerAdmin(){
+    public String registerAdmin(UserRegistrationRequestDto userRegistrationRequestDto){
         if(userRepository.existsByRole("ADMIN")){
             return "Get out, idiot.";
         }
-        User superAdmin = new User();
-        superAdmin.setEmail("admin@.com");
-        superAdmin.setPassword(bCryptPasswordEncoder.encode("superAdmin"));
-        superAdmin.setRole(Role.ADMIN);
-        userRepository.save(superAdmin);
+        User admin = new User();
+        admin.setEmail("admin@.com");
+        admin.setPassword(bCryptPasswordEncoder.encode(userRegistrationRequestDto.getPassword()));
+        admin.setRole(Role.ADMIN);
+        userRepository.save(admin);
         return "Admin is saved";
     }
     public UserRegistrationResponseDto register(UserRegistrationRequestDto userRegistrationRequestDto){

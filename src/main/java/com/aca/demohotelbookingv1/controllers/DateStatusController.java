@@ -1,16 +1,12 @@
 package com.aca.demohotelbookingv1.controllers;
 
-import com.aca.demohotelbookingv1.model.DateStatus;
-import com.aca.demohotelbookingv1.service.DateStatusService;
 import com.aca.demohotelbookingv1.dto.dateStatusDto.DateStatusBookRequestDto;
 import com.aca.demohotelbookingv1.dto.dateStatusDto.DateStatusResponseDto;
-
+import com.aca.demohotelbookingv1.service.DateStatusService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -25,7 +21,7 @@ public class DateStatusController {
 
     @PostMapping
     @PreAuthorize("hasAuthority(T(com.aca.demohotelbookingv1.model.Role).ADMIN) and @userAccessChecker.isUserValid(#userId)")
-    public String insertRoomStatus(@PathVariable Long userId, @PathVariable Long hotelId, @PathVariable Long roomId) {
+    public String insertRoomPerDays(@PathVariable Long userId, @PathVariable Long hotelId, @PathVariable Long roomId) {
         return dateStatusService.insertRoomStatus(hotelId, roomId);
     }
 

@@ -14,22 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class RoomService {
-//    RoomRepository roomRepository;
-//    public RoomService(RoomRepository roomRepository) {
-//        this.roomRepository = roomRepository;
-//    }
-//    public ResponseEntity<Room> enterRoom(Room room){
-//        return ResponseEntity.ok(roomRepository.save(room));
-//    }
-//    public ResponseEntity<List<Room>> getAllRoomsInHotelById(Long hotelId){
-//        List<Room> list = roomRepository.findAllByHotelId(hotelId);
-//        return ResponseEntity.ok(list);
-//    }
-////    public ResponseEntity<List<Room>> getAllRoomsInHotelByName(String hotelName){
-////        List<Room> list = roomRepository.findAllByHotelName(hotelName);
-////        return ResponseEntity.ok(list);
-////    }
-RoomRepository roomRepository;
+    RoomRepository roomRepository;
     HotelRepository hotelRepository;
 
     public RoomService(RoomRepository roomRepository, HotelRepository hotelRepository) {
@@ -48,12 +33,13 @@ RoomRepository roomRepository;
         return "Room is saved.";
     }
 
-
     public String deleteRoomByHotelIdRoomId(Long hotelId, Long roomId) {
-        roomRepository.deleteRoomByHotelIdRoomId(hotelId, roomId);
-        return "Room is deleted";
+        if (roomRepository.existsByHotelIdRoomId(hotelId, roomId)) {
+            roomRepository.deleteRoomByHotelIdRoomId(hotelId, roomId);
+            return "Room is deleted";
+        }
+        return "Room doesn't exist";
     }
-
     public ResponseEntity<List<RoomResponseDto>> findAllRoomsByHotel(Long hotelId) {
         if (!hotelRepository.existsById(hotelId)) {
             throw new RuntimeException("Hotel doesn't exist.");
@@ -73,9 +59,7 @@ RoomRepository roomRepository;
     }
 
     public ResponseEntity<RoomResponseDto> findRoomByHotelIdRoomId(Long hotelId, Long roomId) {
-//        if (!hotelRepository.existsById(hotelId) || !roomRepository.existsById(roomId)) {
-//            throw new RuntimeException("Room doesn't exist.");
-//        }
+
         Room room = roomRepository.findRoomByHotelIdRoomId(hotelId, roomId);
         RoomResponseDto roomResponseDto = new RoomResponseDto();
         roomResponseDto.setRoomType(room.getRoomType());
@@ -85,13 +69,13 @@ RoomRepository roomRepository;
     }
 
     public String updateRoom(Long hotelId, Long roomId, RoomRequestDto roomRequestDto) {
-//        if (roomRepository.existsById(roomId)) {
-//            return "Room doesn't exist";
-//        }
-        Room room = roomRepository.findRoomByHotelIdRoomId(hotelId, roomId);
-        room.setRoomType(roomRequestDto.getRoomType());
-        room.setPricePerDay(roomRequestDto.getPricePerDay());
-        roomRepository.save(room);
-        return "Room is updated";
+        if (roomRepository.existsByHotelIdRoomId(hotelId, roomId)) {
+            Room room = roomRepository.findRoomByHotelIdRoomId(hotelId, roomId);
+            room.setRoomType(roomRequestDto.getRoomType());
+            room.setPricePerDay(roomRequestDto.getPricePerDay());
+            roomRepository.save(room);
+            return "Room is updated";
+        }
+        return "Room doesn't exist";
     }
 }

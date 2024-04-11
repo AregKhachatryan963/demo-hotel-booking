@@ -21,8 +21,8 @@ public class AuthController {
         this.authService = authService;
     }
     @PostMapping("/register_admin")
-    public String registerAdmin(){
-        return authService.registerAdmin();
+    public String registerAdmin(@RequestBody UserRegistrationRequestDto userRegistrationRequestDto){
+        return authService.registerAdmin(userRegistrationRequestDto);
     }
     @PostMapping("/register")
     public UserRegistrationResponseDto register(@RequestBody UserRegistrationRequestDto userRegistrationRequestDto){

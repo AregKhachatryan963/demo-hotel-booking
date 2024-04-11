@@ -56,24 +56,30 @@ DateStatusRepository dateStatusRepository;
         return ResponseEntity.ok(responseDto);
     }
     public String book(Long userId, Long hotelId, Long roomId,  Long dateStatusId, DateStatusBookRequestDto requestDto){
-        DateStatus dateStatus = dateStatusRepository.findByHotelIdRoomIdDateStatusId(hotelId, roomId, dateStatusId);
-        dateStatus.setBooked(true);
-        dateStatus.setFirstName(requestDto.getFirstName());
-        dateStatus.setLastName(requestDto.getLastName());
-        dateStatus.setPassportId(requestDto.getPassportId());
-        dateStatus.setUserId(requestDto.getUserId());
-        dateStatusRepository.save(dateStatus);
-        return "Room is booked.";
+        if(dateStatusRepository.existsByHotelIdRoomIdDateStatusId(hotelId, roomId, dateStatusId)) {
+            DateStatus dateStatus = dateStatusRepository.findByHotelIdRoomIdDateStatusId(hotelId, roomId, dateStatusId);
+            dateStatus.setBooked(true);
+            dateStatus.setFirstName(requestDto.getFirstName());
+            dateStatus.setLastName(requestDto.getLastName());
+            dateStatus.setPassportId(requestDto.getPassportId());
+            dateStatus.setUserId(userId);
+            dateStatusRepository.save(dateStatus);
+            return "Room is booked.";
+        }
+        return "Room is not booked, check data";
     }
     public String unbook(Long userId, Long hotelId, Long roomId, Long dateStatusId){
-        DateStatus dateStatus = dateStatusRepository.findByHotelIdRoomIdDateStatusId(hotelId, roomId, dateStatusId);
-        if(Objects.equals(dateStatus.getUserId(), userId)) {
-            dateStatus.setBooked(false);
-            dateStatus.setFirstName(null);
-            dateStatus.setLastName(null);
-            dateStatus.setPassportId(null);
-            dateStatusRepository.save(dateStatus);
-            return "Room is unbooked.";
+        if(dateStatusRepository.existsByHotelIdRoomIdDateStatusId(hotelId, roomId, dateStatusId)) {
+            DateStatus dateStatus = dateStatusRepository.findByHotelIdRoomIdDateStatusId(hotelId, roomId, dateStatusId);
+            if(Objects.equals(dateStatus.getUserId(), userId)) {
+                dateStatus.setBooked(false);
+                dateStatus.setFirstName(null);
+                dateStatus.setLastName(null);
+                dateStatus.setPassportId(null);
+                dateStatusRepository.save(dateStatus);
+                return "Room is unbooked.";
+            }
+            return "Room is not unbooked, check data";
         }
         return "You can't unbook this reservation.";
     }
