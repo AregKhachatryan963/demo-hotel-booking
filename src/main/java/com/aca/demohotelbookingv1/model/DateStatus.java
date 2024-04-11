@@ -28,8 +28,4 @@ public class DateStatus {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "room_id", referencedColumnName = "id")
     private Room room;
-
-//    @OneToOne
-//    @JoinColumn(name = "user_id",referencedColumnName = "id")
-//    private User user;
 }

@@ -58,6 +58,9 @@ DateStatusRepository dateStatusRepository;
     public String book(Long userId, Long hotelId, Long roomId,  Long dateStatusId, DateStatusBookRequestDto requestDto){
         if(dateStatusRepository.existsByHotelIdRoomIdDateStatusId(hotelId, roomId, dateStatusId)) {
             DateStatus dateStatus = dateStatusRepository.findByHotelIdRoomIdDateStatusId(hotelId, roomId, dateStatusId);
+            if(dateStatus.isBooked()){
+                return "Room is already booked by other customer.";
+            }
             dateStatus.setBooked(true);
             dateStatus.setFirstName(requestDto.getFirstName());
             dateStatus.setLastName(requestDto.getLastName());
@@ -66,7 +69,7 @@ DateStatusRepository dateStatusRepository;
             dateStatusRepository.save(dateStatus);
             return "Room is booked.";
         }
-        return "Room is not booked, check data";
+        return "Room is not booked, check data and try again";
     }
     public String unbook(Long userId, Long hotelId, Long roomId, Long dateStatusId){
         if(dateStatusRepository.existsByHotelIdRoomIdDateStatusId(hotelId, roomId, dateStatusId)) {
